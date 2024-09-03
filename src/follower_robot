@@ -1,0 +1,270 @@
+#!/usr/bin/env pybricks-micropython
+from pybricks.hubs import EV3Brick
+from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
+                                 InfraredSensor, UltrasonicSensor, GyroSensor)
+from pybricks.parameters import Port, Stop, Direction, Button, Color
+from pybricks.tools import wait, StopWatch, DataLog
+from pybricks.robotics import DriveBase
+from pybricks.media.ev3dev import SoundFile, ImageFile
+from pybricks.iodevices import UARTDevice
+from pybricks.iodevices import I2CDevice
+from mindsensorsPYB import LSA
+import math
+import time
+
+ev3 = EV3Brick()
+lsa = LSA(Port.S1, 0x14)
+ser = UARTDevice(Port.S2, baudrate=115200)
+cs = ColorSensor(Port.S3)
+ultra = UltrasonicSensor(Port.S4)
+steering_motor = Motor(Port.A, Direction.CLOCKWISE)
+run_motor = Motor(Port.B, Direction.CLOCKWISE)
+
+#PID제어변수
+th = 23
+kp = 5.5   #th = 30/ kp 5.7/ ki = 0.001/ kd = 0.15     #th = 31/kp =5.2 / ki = 0.001/kd=0.16
+ki = 0.02
+kd = 0.06
+
+#변수
+integration1 = 0
+integration2 = 0
+integration3 = 0
+
+previous_error1 = 0
+previous_error2 = 0
+previous_error3 = 0
+
+previous_time = time.time()
+
+TRAFFIC = False
+VELOCITY = False
+FINISH = False
+
+min_distance = 35
+counter_red = 0
+counter_yellow = 0
+
+ignore_color_timer = StopWatch()
+ignore_color_timer1 = StopWatch()
+ignore_color_timer3 = StopWatch()
+
+ignore_duration = 4000 
+ignore_duration1 = 2000 
+ignore_duration3 = 2000
+
+def get_error1(th, sensor_values):
+    error1 = th - ((sensor_values[0] + sensor_values[1]) / 2)
+    return error1
+
+def get_error2(th, sensor_values):
+    error2 = th - ((sensor_values[3] + sensor_values[4]) / 2)
+    return error2
+
+def get_error3(th, sensor_values):
+    error3 = th - ((sensor_values[6]+ sensor_values[7])/2 )
+    return error3
+
+def start(steering_motor): 
+    steering_motor.run(100)
+    while True:
+        a = steering_motor.angle()
+        wait(100)
+        b = steering_motor.angle()
+        if a == b:
+            break
+    steering_motor.stop()
+    steering_motor.run_angle(-100, 100)
+    steering_motor.reset_angle(0)
+    
+def read_openmv_data():
+    try:
+        data = ser.read_all()
+        return data.decode().strip()
+    except:
+        pass
+
+def determine_traffic_light_state():
+    results = {"GREEN": 0, "RED": 0}
+    for _ in range(3):
+        label = read_openmv_data()
+        print("Label read: ", label)
+        if 'GREEN' in label:
+            results["GREEN"] += 1
+        if 'RED' in label:
+            results["RED"] += 1
+        wait(50)  
+    final_state = "GREEN" if results["GREEN"] > results["RED"] else "RED"
+    print("최종 신호 결정: ", final_state)  
+    return final_state
+
+def TrafficColor():
+    while True:
+        state = determine_traffic_light_state()
+        if state == "GREEN":
+            print("Green 감지. 주행 시작.")
+            ev3.light.on(Color.GREEN)
+            return
+        else:
+            print("Red 감지. 대기.")
+            ev3.light.on(Color.RED)
+            wait(200) 
+            
+def isRED(p:list, th): 
+    red = [40, 14, 21] 
+    if calc_euclidean_distance(red, p) <= th:
+        return True
+    return False
+    
+def isYELLOW(p:list, th): #55 51 26 41 50 16
+    yellow = [53, 48, 26] 
+    if calc_euclidean_distance(yellow, p) <= th:
+        return True
+    return False
+
+def isBLUE(p:list, th): 
+    blue = [6, 15, 52]
+    if calc_euclidean_distance(blue, p) <= th:
+        return True
+    return False
+
+def calc_euclidean_distance(color1, color2):
+    return math.sqrt(sum((c1 - c2) ** 2 for c1, c2 in zip(color1, color2)))
+
+def handle(sensor_values, correction1, correction2,correction3): # 초록이 50, 60
+    center = sensor_values[3] + sensor_values[4] 
+    end = sensor_values[0] + sensor_values[7]
+    if (sensor_values[0] <= 9) and  (center >= 34) and (sensor_values[7] >= 18) :
+        steering_motor.run_target(800,-correction2)
+        print('약간 우회전')
+    elif (sensor_values[0] <= 9) and (center < 34) and (sensor_values[7] >= 13):
+        steering_motor.run_target(1400, -correction1)
+        print('완전 우회전')        
+    elif (sensor_values[0] >= 13)  and (center >= 30)  and (sensor_values[7] <= 14) :
+        steering_motor.run_target(800, correction2) 
+        print('약간 좌회전')
+    elif (sensor_values[0] < 13) and (center < 26 ) and (sensor_values[7] <= 14) :
+        steering_motor.run_target(800, correction3)
+        print('완전 좌회전')
+    elif (sensor_values[0] <= 13)  and (center >=40) and (sensor_values[7] >= 14):
+        steering_motor.run_target(800, 0) 
+        print("직진하세요")
+
+        
+start(steering_motor)
+start_time = time.time()
+run_motor.run(350)
+while True:
+    try:
+        current_time = time.time()
+        delta_time = current_time - previous_time
+        
+        data = lsa.ReadRaw_Calibrated()
+        sensor_values = list(data)
+        print(sensor_values)
+
+        error1 = get_error1(th, sensor_values)
+        error2 = get_error2(th, sensor_values)
+        error3 = get_error3(th, sensor_values)
+        # print("error1", error1)
+        # print("error2", error2)
+        # print("error3", error3)
+
+        integration1 += error1 * delta_time
+        integration2 += error2 * delta_time
+        integration3 += error3 * delta_time
+
+        # print("integration1", integration1)
+        # print("integration2", integration2)
+        # print("integration3", integration3)
+        
+        
+        derivative1 = (error1 - previous_error1) / delta_time
+        derivative2 = (error2 - previous_error2) / delta_time
+        derivative3 = (error3 - previous_error3) / delta_time
+        
+        correction1 = kp * error1 + kd * derivative1 + ki * integration1  
+        correction2 = kp * error2 + kd * derivative2 + ki * integration2  
+        correction3 = kp * error3 + kd * derivative3 + ki * integration3  
+
+        # print("correction1", correction1)
+        # print("correction2", correction2)
+        # print("correction3", correction3)
+        
+        if correction1 > 85:
+            correction1 = 85
+        if correction1 < -85:
+            correction1 = -85
+
+        if correction2 > 85:
+            correction2 = 85
+        if correction2 < -85:
+            correction2 = -85
+        if correction3 > 85:
+            correction3 = 85
+        if correction3 < -85:
+            correction3 = -85
+
+        handle(sensor_values,correction1,correction2,correction3)
+        
+        previous_error1 = error1
+        previous_error2 = error2
+        previous_error3 = error3
+        previous_time = current_time
+            
+        color_rate = list(cs.rgb())  
+        # print(color_rate)
+        if ignore_color_timer1.time() >= ignore_duration1:
+            if isRED(color_rate, 10) : #red RGB 값 조정
+                counter_red += 1
+                print("레드")
+                if counter_red == 2 :
+                    run_motor.brake()
+                    break 
+                ignore_color_timer1.reset() 
+                
+        if ignore_color_timer.time() >= ignore_duration:
+            if isYELLOW(color_rate, 15) :
+                ev3.light.on(Color.YELLOW)
+                counter_yellow += 1
+                VELOCITY = False
+                print("노랑")
+                if counter_yellow <= 10 :
+                    TRAFFIC = True 
+                ignore_color_timer.reset() 
+            
+        if isBLUE(color_rate, 10) :
+            ev3.light.on(Color.RED)
+            VELOCITY = True
+            
+        if TRAFFIC : 
+            run_motor.brake()
+            TrafficColor()
+            TRAFFIC = False
+            
+        distance = ultra.distance() / 10
+        # print("distance", distance)
+        
+        if distance <= min_distance:
+            run_motor.run(250)
+            print("가까워")
+            if distance <= 27 :
+                run_motor.stop()
+                print("멈춰!!!!!!!")
+        else:
+            if VELOCITY :
+                run_motor.run(250)
+                print("파란색 감지!!!")
+            else:
+                run_motor.run(350)
+                print("멀어")
+      
+    except Exception as e:
+        pass
+    
+    finally :
+        end_time = time.time()
+        execution_time = end_time - start_time
+        print("코드 실행 시간:",execution_time)
+
+
