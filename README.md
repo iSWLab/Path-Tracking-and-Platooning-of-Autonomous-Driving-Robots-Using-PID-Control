@@ -46,7 +46,11 @@ LSA(Light Sensor Array)센서를 사용하여 각 센서가 측정한 조도 값
 </blockquote>
 
 
-![image](https://github.com/user-attachments/assets/054a61ea-c3d3-4279-a7b2-afd0ae50ca니다.
+![image](https://github.com/user-attachments/assets/054a61ea-c3d3-4279-a7b2-afd0ae50ca)
+
+
+<blockquote>
+Algorithm1 은 3 가지 조작량의 사용 기준을 나타냅니다. 왼쪽 끝의 0 번 센서, 중앙의 3 번 및 4 번 센서, 그리고 오른쪽 끝의 7 번 센서를 기준으로 정해집니다. 로봇에 장착된 센서마다 측정 값이 다르기 때문에, 측정 후에 적절한 기준을 설정해야 합니다.
 </blockquote>
 
 </details>
