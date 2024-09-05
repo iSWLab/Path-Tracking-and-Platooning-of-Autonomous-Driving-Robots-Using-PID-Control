@@ -56,11 +56,26 @@
 <details>
 <summary>실험 도구</summary>
 ![image](https://github.com/user-attachments/assets/cd8ef478-4fd8-4874-a3f7-7360b7d5389d)
+
+<blockquote>
 본 연구에 사용한 선행 로봇(좌)과 후행 로봇(우)입니다. 후행 로봇은 선행 로봇과의 거리를 측정하기 위해 초음파 센서가 앞쪽에 장착되어 있고 라인을 추적하기 위해 이용하는 LSA 센서도 앞쪽 하부에 장착되어 있습니다.
+</blockquote>
+
+
 ![image](https://github.com/user-attachments/assets/2eccd59e-8f7e-48a2-aca7-feef7c84d017)
+
+
+<blockquote>
 실험을 확인하기 위한 트랙입니다. 초록색 선은 선행 로봇의 출발 지점을, 빨간색 선은 후행 로봇의 출발 지점을 나타냅니다. 노란색 선은 신호등을 인식하기 위해 멈추어야 하는 지점을 나타내고 파란색 선은 서행 구역을 표시합니다.
-![image](https://github.com/user-attachments/assets/3297b4b9-320e-4866-ac3d-d5b856767627)
+</blockquote>
+
+
+![image](https://github.com/user-attachments/assets/3297b4b9-320e-4866-ac3d-d5b856767627
+
+
+<blockquote>
  로봇이 신호등을 인식하고 이에 맞춰 주행을 제어할 수 있도록 두 가지 형태(원형, 사각형)의 신호등을 설정하였습니다. 신호등은 감지 센서에 의해 작동됩니다.
+</blockquote>
 </details>
 
 ## 프로젝트 결과 영상
