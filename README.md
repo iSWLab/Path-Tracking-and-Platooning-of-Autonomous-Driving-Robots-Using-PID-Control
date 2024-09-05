@@ -46,7 +46,7 @@ LSA(Light Sensor Array)센서를 사용하여 각 센서가 측정한 조도 값
 </blockquote>
 
 
-![image](https://github.com/user-attachments/assets/054a61ea-c3d3-4279-a7b2-afd0ae50ca)
+![사진](https://github.com/user-attachments/assets/80cec2a4-b0e2-4910-94d2-616699f29cdd)
 
 
 <blockquote>
