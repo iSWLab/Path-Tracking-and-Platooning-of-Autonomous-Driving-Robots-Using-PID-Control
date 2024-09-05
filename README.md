@@ -29,18 +29,25 @@
 
 ![image](https://github.com/user-attachments/assets/b1eb64d3-258d-4802-8dc6-7a890f565a5c)
 
-
+<blockquote>
 LSA(Light Sensor Array)센서를 사용하여 각 센서가 측정한 조도 값을 리스트 형태로 저장하고 활용하며 각 센서에서 얻은 값을 기반으로 오차값을 계산합니다.
-
+  
 8 개의 센서 값 중에서 왼쪽 끝 2 개의 값의 평균을 이용한 오차값은 다음과 같습니다.
+</blockquote>
 
 
 ![image](https://github.com/user-attachments/assets/d913325b-0685-48db-af4a-8c2eae4646da)
 
 
-여기서 th 란 목표값을 나타내며, 이는 로봇이 센서를 통해 트랙에서 측정한 흰색 선의 값을 나타냅니다. 중앙의 오차값(error2), 오른쪽의 오차값(error3)도 이와 같이 계산됩니다. 이 오차값들은 로봇이 트랙 위에서 벗어나지
-않도록 조작량을 결정하는데 활용하고 조작량은 PID 제어 식에 따라 계산됩니다. 이 공식을 통해 각 오차값에 대한 3 가지 조작량이 생성되며, 로봇의 움직임을 섬세하게 제어하여 트랙을 정확하게 주행할 수 있도록 합니다.
+<blockquote>
+여기서 th 란 목표값을 나타내며, 이는 로봇이 센서를 통해 트랙에서 측정한 흰색 선의 값을 나타냅니다. 중앙의 오차값(error2), 오른쪽의 오차값(error3)도 이와 같이 계산됩니다. 
 
+이 오차값들은 로봇이 트랙 위에서 벗어나지 않도록 조작량을 결정하는데 활용하고 조작량은 PID 제어 식에 따라 계산됩니다. 이 공식을 통해 각 오차값에 대한 3 가지 조작량이 생성되며, 로봇의 움직임을 섬세하게 제어하여 트랙을 정확하게 주행할 수 있도록 합니다.
+</blockquote>
+
+
+![image](https://github.com/user-attachments/assets/054a61ea-c3d3-4279-a7b2-afd0ae50ca니다.
+</blockquote>
 
 </details>
 
