@@ -72,6 +72,7 @@
 </blockquote>
 
 
+
 ![image](https://github.com/user-attachments/assets/3297b4b9-320e-4866-ac3d-d5b856767627
 
 
@@ -80,7 +81,24 @@
 </blockquote>
 </details>
 
-## 프로젝트 결과 영상
+## 실험 결과
+
+
+![image](https://github.com/user-attachments/assets/a0b77754-a40e-4818-ab64-607cbe0c96fc)
+
+
+<blockquote>
+선행 로봇이 경로 추적을 할 때 PID 제어 적용 전(좌)과 후(우)를 비교한 데이터 입니다. x 축은 로봇의 트랙 2 바퀴 완주 시간을 나타낸 것이고 y 축은 2. PID 제어를 이용한 경로 추적 및 군집주행 시스템 설계에서의 error2 를 나타냅니다. 그래프에서 볼 수 있듯이, PID 를 적용하지 않는 경우 일정한 패턴 없이 error 값이 급격하게 변동하며 불안정적인 주행을 보여줍니다. 이는 직선 구간과 코너 구간에서 흰색 선을 정확하게 추적하지 못 하고 있다는 것을 나타냅니다. 또한, 로봇이 트랙을 벗어나는 문제가 발생하여 벗어난 로봇을 트랙으로 옮겨주는 작업이 필요했습니다. 따라서 PID 제어 전 주행에서는 시간이 더 소요되며 비효율적이라는 것을 알 수 있었습니다. PID 를 적용하는 경우 error 값이 비교적 일정한 패턴으로 유지되며, 직진 구간에서 급격한 변동 없이 흰색 선을 잘 따라가고 있는 것을 보여줍니다. 코너 구간에서 흰색 선을 잠시 벗어났지만 곧바로 다시 흰색 선으로 돌아와 안정적으로 주행하며 이는 PID 제어가 효과적으로 작동하고 있음을 나타냅니다.
+</blockquote>
+
+![image](https://github.com/user-attachments/assets/17dacbee-4da5-47d4-b9b3-db69a9ad2f70)
+
+
+<blockquote>
+위 사진은 실험에서 두 로봇이 동시에 출발한 후, 서로 적절한 거리를 유지하며 주행하는 모습을 확인하였습니다. 이를 통해 시스템의 자율주행과 군집주행 기능이 실험 환경에서도 성공적으로 동작함을 확인하였습니다.
+</blockquote>
+
+## 프로젝트 결과 영상 
 [![Watch the video](https://img.youtube.com/vi/KbpQ3JgK9nE/0.jpg)](https://youtu.be/KbpQ3JgK9nE)
 
 
