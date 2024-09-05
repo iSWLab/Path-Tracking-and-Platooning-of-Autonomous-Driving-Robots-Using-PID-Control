@@ -7,13 +7,13 @@
 
 ## 시스템 설계
 <details>
-<summary>**PID 제어를 이용한 경로 추적**</summary> PID(Proportional Integral Derivative) 제어기를 활용하여 자율주행 로봇이 트랙을 정확하게 따라가도록 설계하였습니다. 각 로봇의 조향을 정밀하게 제어하여 안정적인 주행을 수행합니다.
+<summary>PID 제어를 이용한 경로 추적</summary>  자율주행 로봇은 목표 경로를 따라가기 위하여 조향 조작이 필요합니다. PID(Proportional Integral Derivative) 제어기를 활용하여 자율주행 로봇이 트랙을 정확하게 따라가도록 설계하였습니다. PID 제어기의 제어식은 다음과 같습니다.
 
   
 ![image](https://github.com/user-attachments/assets/685f3f88-f1af-4e9e-99eb-13d185c46d9f)
 
 
-각 PID 제어 이득의 최적화된 값은 수동 튜닝을 통하여 구하였습니다.
+로봇마다 PID 제어 이득의 최적화된 값이 다르므로 수동 튜닝을 통하여 각 로봇에 맞게 최적화된 값을 구하였습니다. 
 
 
 ![image](https://github.com/user-attachments/assets/811efa4b-ca42-4599-9dc5-85fa6055db60)
